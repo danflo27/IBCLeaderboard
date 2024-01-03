@@ -110,18 +110,18 @@ import (
 	ibctm "github.com/cosmos/ibc-go/v7/modules/light-clients/07-tendermint"
 	"github.com/spf13/cast"
 
-	leaderboardmodule "github.com/cosmonaut/leaderboard2/x/leaderboard"
-	leaderboardmodulekeeper "github.com/cosmonaut/leaderboard2/x/leaderboard/keeper"
-	leaderboardmoduletypes "github.com/cosmonaut/leaderboard2/x/leaderboard/types"
+	leaderboardmodule "github.com/cosmonaut/leaderboard/x/leaderboard"
+	leaderboardmodulekeeper "github.com/cosmonaut/leaderboard/x/leaderboard/keeper"
+	leaderboardmoduletypes "github.com/cosmonaut/leaderboard/x/leaderboard/types"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 
-	appparams "github.com/cosmonaut/leaderboard2/app/params"
-	"github.com/cosmonaut/leaderboard2/docs"
+	appparams "github.com/cosmonaut/leaderboard/app/params"
+	"github.com/cosmonaut/leaderboard/docs"
 )
 
 const (
 	AccountAddressPrefix = "cosmos"
-	Name                 = "leaderboard2"
+	Name                 = "leaderboard"
 )
 
 // this line is used by starport scaffolding # stargate/wasm/app/enabledProposals
@@ -249,8 +249,7 @@ type App struct {
 	ScopedTransferKeeper capabilitykeeper.ScopedKeeper
 	ScopedICAHostKeeper  capabilitykeeper.ScopedKeeper
 
-	ScopedLeaderboardKeeper capabilitykeeper.ScopedKeeper
-	LeaderboardKeeper       leaderboardmodulekeeper.Keeper
+	LeaderboardKeeper leaderboardmodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// mm is the module manager
@@ -520,20 +519,14 @@ func New(
 		),
 	)
 
-	scopedLeaderboardKeeper := app.CapabilityKeeper.ScopeToModule(leaderboardmoduletypes.ModuleName)
-	app.ScopedLeaderboardKeeper = scopedLeaderboardKeeper
 	app.LeaderboardKeeper = *leaderboardmodulekeeper.NewKeeper(
 		appCodec,
 		keys[leaderboardmoduletypes.StoreKey],
 		keys[leaderboardmoduletypes.MemStoreKey],
 		app.GetSubspace(leaderboardmoduletypes.ModuleName),
-		app.IBCKeeper.ChannelKeeper,
-		&app.IBCKeeper.PortKeeper,
-		scopedLeaderboardKeeper,
 	)
 	leaderboardModule := leaderboardmodule.NewAppModule(appCodec, app.LeaderboardKeeper, app.AccountKeeper, app.BankKeeper)
 
-	leaderboardIBCModule := leaderboardmodule.NewIBCModule(app.LeaderboardKeeper)
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	/**** IBC Routing ****/
@@ -545,7 +538,6 @@ func New(
 	ibcRouter := ibcporttypes.NewRouter()
 	ibcRouter.AddRoute(icahosttypes.SubModuleName, icaHostIBCModule).
 		AddRoute(ibctransfertypes.ModuleName, transferIBCModule)
-	ibcRouter.AddRoute(leaderboardmoduletypes.ModuleName, leaderboardIBCModule)
 	// this line is used by starport scaffolding # ibc/app/router
 	app.IBCKeeper.SetRouter(ibcRouter)
 

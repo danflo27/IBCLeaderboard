@@ -34923,10 +34923,10 @@ paths:
           format: int64
       tags:
         - Query
-  /cosmonaut/leaderboard2/leaderboard/params:
+  /cosmonaut/leaderboard/leaderboard/params:
     get:
       summary: Parameters queries the parameters of the module.
-      operationId: Leaderboard2LeaderboardParams
+      operationId: LeaderboardLeaderboardParams
       responses:
         '200':
           description: A successful response.
@@ -59053,10 +59053,10 @@ definitions:
             NOTE: The amount field is an Int which implements the custom method
             signatures required by gogoproto.
     description: Period defines a length of time and amount of coins that will vest.
-  leaderboard2.leaderboard.Params:
+  leaderboard.leaderboard.Params:
     type: object
     description: Params defines the parameters for the module.
-  leaderboard2.leaderboard.QueryParamsResponse:
+  leaderboard.leaderboard.QueryParamsResponse:
     type: object
     properties:
       params:

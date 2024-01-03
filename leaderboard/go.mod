@@ -1,4 +1,4 @@
-module github.com/cosmonaut/leaderboard2
+module github.com/cosmonaut/leaderboard
 
 go 1.19
 
