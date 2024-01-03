@@ -1,0 +1,13 @@
+syntax = "proto3";
+package leaderboard2.leaderboard;
+
+option go_package = "github.com/cosmonaut/leaderboard2/x/leaderboard/types";
+
+message LeaderboardPacketData {
+    oneof packet {
+        NoData noData = 1;
+    }
+}
+
+message NoData {
+}
